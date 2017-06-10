@@ -8,6 +8,7 @@
 
 import UIKit
 import AVFoundation
+import CoreImage
 
 // scan from camera
 // scan from photo library
@@ -38,14 +39,59 @@ class QRHacker : UIViewController, AVCaptureMetadataOutputObjectsDelegate,UIImag
         
         super.viewDidLoad()
         
+        requsetCameraPrivacy()
         
-        setUpScanFromCamera()
 
         // Do any additional setup after loading the view, typically from a nib.
     }
-    
-    
+    func requsetCameraPrivacy(){
+        
+        
+        let cameraMediaType = AVMediaTypeVideo
+        let cameraAuthorizationStatus = AVCaptureDevice.authorizationStatus(forMediaType: cameraMediaType)
+        
+        switch cameraAuthorizationStatus {
+            
+        // The client is authorized to access the hardware supporting a media type.
+        case .authorized:
+            
+            _ = setUpScanFromCamera()
+            // The client is not authorized to access the hardware for the media type. The user cannot change
+        // the client's status, possibly due to active restrictions such as parental controls being in place.
+        case .restricted:
+            break //alertMessageAction("Camera Have Restricted", complete: nil)
+            
+        // The user explicitly denied access to the hardware supporting a media type for the client.
+        case .denied:
+            //alertMessageAction("Camera Have Denied, Please Enable in System Settings", complete: nil)
+            break
+        // Indicates that the user has not yet made a choice regarding whether the client can access the hardware.
+        case .notDetermined:
+            // Prompting user for the permission to use the camera.
+            let n = Date()
+            
+            AVCaptureDevice.requestAccess(forMediaType: cameraMediaType) { [unowned self ] granted in
+                if granted {
+                    //self.view.setNeedsDisplay()
+                    print("ksdfjkds sec",Date().timeIntervalSince(n))
+                    DispatchQueue.main.async {
+                        _ = self.setUpScanFromCamera()
+                    }
+                    
+                    
+                    //print("Granted access to \(cameraMediaType)")
+                } else {
+                    print("Not granted access to \(cameraMediaType)")
+                }
+            }
+//            break
+        }
+        
+    }
+
+
     override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
         setUpCancelScan()
 
     }
@@ -53,6 +99,22 @@ class QRHacker : UIViewController, AVCaptureMetadataOutputObjectsDelegate,UIImag
     func setUpScanFromLibrary(){
         
     }
+    
+    func creatQRCode(withString str:String){
+        
+       let data = str.data(using: String.Encoding.isoLatin1)
+        let filter = CIFilter.init(name: "CIQRCodeGenerator")
+        filter?.setValue(data, forKey: "inputMessage")
+        filter?.setValue("Q", forKey: "inputCorrectionLevel")
+        
+        let qrImage = filter?.outputImage
+        
+        // let code = qrcode
+        
+        
+    }
+    
+    
     
     
     func setUpCancelScan(){
@@ -183,5 +245,26 @@ class QRHacker : UIViewController, AVCaptureMetadataOutputObjectsDelegate,UIImag
         // Dispose of any resources that can be recreated.
     }
     
+    
+}
+
+class AutoDetectImageView: UIImageView{
+    
+    override init(image: UIImage?) {
+        super.init(image: image)
+        
+        let gesReg = UILongPressGestureRecognizer.init(target: self, action: #selector(longPressTriggered))
+        self.addGestureRecognizer(gesReg)
+        
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        super.init(coder: aDecoder)
+    }
+    
+    func longPressTriggered(){
+        
+        
+    }
     
 }
