@@ -10,6 +10,30 @@ import UIKit
 
 class ViewController: UIViewController {
 
+    
+    @IBOutlet weak var qrImageView: UIImageView!
+    
+    
+    @IBOutlet weak var inputTextField: UITextField!
+    
+    
+    @IBOutlet weak var outputLabel: UILabel!
+    
+    
+    @IBAction func showQRView(_ sender: Any) {
+        
+        let vc = QRHacker.init(nibName: nil, bundle: nil)
+        
+        // self.present(vc, animated: true, completion: nil)
+        
+        self.show(vc, sender: nil)
+    }
+    
+    @IBAction func generateQRImage(_ sender: Any) {
+        
+        
+        
+    }
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -21,11 +45,7 @@ class ViewController: UIViewController {
     
     override func viewDidAppear(_ animated: Bool) {
         
-        let vc = QRHacker.init(nibName: nil, bundle: nil)
-        
-       // self.present(vc, animated: true, completion: nil)
-        
-        self.show(vc, sender: nil)
+     
     }
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()

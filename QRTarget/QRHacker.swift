@@ -11,6 +11,8 @@ import AVFoundation
 import CoreImage
 
 // scan from camera
+
+
 // scan from photo library
 
 //code string to QRCode
