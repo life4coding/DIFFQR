@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		55F57B371EF1E64800F9D87E /* qrcode.png in Resources */ = {isa = PBXBuildFile; fileRef = 55F57B361EF1E64800F9D87E /* qrcode.png */; };
 		57B8C2451ED418B700AA6F56 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 57B8C2441ED418B700AA6F56 /* AppDelegate.swift */; };
 		57B8C2471ED418B700AA6F56 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 57B8C2461ED418B700AA6F56 /* ViewController.swift */; };
 		57B8C24A1ED418B700AA6F56 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 57B8C2481ED418B700AA6F56 /* Main.storyboard */; };
@@ -18,6 +19,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		55F57B361EF1E64800F9D87E /* qrcode.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = qrcode.png; path = ../../../../Downloads/qrcode.png; sourceTree = "<group>"; };
 		57B8C2411ED418B700AA6F56 /* QRTarget.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = QRTarget.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		57B8C2441ED418B700AA6F56 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		57B8C2461ED418B700AA6F56 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -63,6 +65,7 @@
 				57B8C2441ED418B700AA6F56 /* AppDelegate.swift */,
 				57B8C2461ED418B700AA6F56 /* ViewController.swift */,
 				57B8C2561ED41A4E00AA6F56 /* QRHacker.swift */,
+				55F57B361EF1E64800F9D87E /* qrcode.png */,
 				57B8C2581ED57C7500AA6F56 /* photo@3x.png */,
 				57B8C25A1ED57F5400AA6F56 /* back@3x.png */,
 				57B8C2481ED418B700AA6F56 /* Main.storyboard */,
@@ -136,6 +139,7 @@
 				57B8C25B1ED57F5400AA6F56 /* back@3x.png in Resources */,
 				57B8C2591ED57C7500AA6F56 /* photo@3x.png in Resources */,
 				57B8C24F1ED418B700AA6F56 /* LaunchScreen.storyboard in Resources */,
+				55F57B371EF1E64800F9D87E /* qrcode.png in Resources */,
 				57B8C24C1ED418B700AA6F56 /* Assets.xcassets in Resources */,
 				57B8C24A1ED418B700AA6F56 /* Main.storyboard in Resources */,
 			);
@@ -314,6 +318,7 @@
 				57B8C2551ED418B700AA6F56 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

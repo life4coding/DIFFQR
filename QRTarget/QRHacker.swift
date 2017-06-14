@@ -29,23 +29,29 @@ import CoreImage
 //wait to do: set function button size dynamically
 
 
-class QRHacker : UIViewController, AVCaptureMetadataOutputObjectsDelegate,UIImagePickerControllerDelegate, UINavigationControllerDelegate {
+class QRHackerViewController : UIViewController, AVCaptureMetadataOutputObjectsDelegate,UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     
     var session = AVCaptureSession.init()
     
     var didScanComplete:((_ result:String)->Void)?
     var didScanFiald:(()->Void)?
     
-    
+    //view life cycle
     override func viewDidLoad() {
         
         super.viewDidLoad()
         
         requsetCameraPrivacy()
         
-
-        // Do any additional setup after loading the view, typically from a nib.
     }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        setUpCancelScan()
+        
+    }
+    
+    //request privacy
     func requsetCameraPrivacy(){
         
         
@@ -70,18 +76,14 @@ class QRHacker : UIViewController, AVCaptureMetadataOutputObjectsDelegate,UIImag
         // Indicates that the user has not yet made a choice regarding whether the client can access the hardware.
         case .notDetermined:
             // Prompting user for the permission to use the camera.
-            let n = Date()
-            
             AVCaptureDevice.requestAccess(forMediaType: cameraMediaType) { [unowned self ] granted in
                 if granted {
                     //self.view.setNeedsDisplay()
-                    print("ksdfjkds sec",Date().timeIntervalSince(n))
+                    
                     DispatchQueue.main.async {
                         _ = self.setUpScanFromCamera()
                     }
                     
-                    
-                    //print("Granted access to \(cameraMediaType)")
                 } else {
                     print("Not granted access to \(cameraMediaType)")
                 }
@@ -90,32 +92,11 @@ class QRHacker : UIViewController, AVCaptureMetadataOutputObjectsDelegate,UIImag
         }
         
     }
-
-
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-        setUpCancelScan()
-
-    }
+    
     
     func setUpScanFromLibrary(){
         
     }
-    
-    func creatQRCode(withString str:String){
-        
-       let data = str.data(using: String.Encoding.isoLatin1)
-        let filter = CIFilter.init(name: "CIQRCodeGenerator")
-        filter?.setValue(data, forKey: "inputMessage")
-        filter?.setValue("Q", forKey: "inputCorrectionLevel")
-        
-        let qrImage = filter?.outputImage
-        
-        // let code = qrcode
-        
-        
-    }
-    
     
     
     
@@ -143,8 +124,6 @@ class QRHacker : UIViewController, AVCaptureMetadataOutputObjectsDelegate,UIImag
         
       //set cancel button
         
-        
-        
         let cancelButton = UIButton.init(type: .custom)
         cancelButton.setImage(UIImage.init(named: "back"), for: .normal)
         cancelButton.bounds.size = CGSize.init(width: 50, height: 50)
@@ -152,10 +131,8 @@ class QRHacker : UIViewController, AVCaptureMetadataOutputObjectsDelegate,UIImag
         cancelButton.addTarget(self, action: #selector(cancelScan), for: .touchUpInside)
         
         blurView.addSubview(cancelButton)
-
         
     }
-    
     
     func setUpScanFromCamera(){
         let device = AVCaptureDevice.defaultDevice(withMediaType:AVMediaTypeVideo)
@@ -203,31 +180,23 @@ class QRHacker : UIViewController, AVCaptureMetadataOutputObjectsDelegate,UIImag
         
     }
     
-    func scanQRFromPhotos(_ image:UIImage){
-        let detector = CIDetector.init(ofType: CIDetectorTypeQRCode, context: nil, options: [CIDetectorAccuracy:CIDetectorAccuracyHigh])
-        
-        let results = detector?.features(in: CIImage.init(image: image)!)
-        
-        let result = results?.first as! CIQRCodeFeature
-        
-        print("value is : \(String(describing: result.messageString))")
-
-        
-    }
-    
     
     func captureOutput(_ captureOutput: AVCaptureOutput!, didOutputMetadataObjects metadataObjects: [Any]!, from connection: AVCaptureConnection!) {
         
         if metadataObjects.count > 0{
             
-            let ob = metadataObjects.first
-            
-            didScanComplete!(String(describing: ob))
-            
-            print("value is : \(String(describing: ob))")
-            
+         let ob = metadataObjects.first as! AVMetadataMachineReadableCodeObject
+                
+                self.dismiss(animated: true, completion: {
+                    
+                    self.didScanComplete!(ob.stringValue)
+                    
+                })
         }
     }
+    
+    
+    //MARK: imagePicker delegate methohs
     
     func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
         //
@@ -238,35 +207,77 @@ class QRHacker : UIViewController, AVCaptureMetadataOutputObjectsDelegate,UIImag
         
         let image = info[UIImagePickerControllerOriginalImage]
         picker.dismiss(animated: true) { 
-            self.scanQRFromPhotos(image as! UIImage)
+           let result = QRHacker.scanQRFromPhotos(image as! UIImage)
+            
+            self.dismiss(animated: true, completion: {
+                self.didScanComplete!(result)
+                
+            })
         }
     }
+    
+    
+    //MARK: generate and scan qr code with picture
+    //create qr code image from string
+    
     
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
     
-    
 }
 
-class AutoDetectImageView: UIImageView{
+class QRHacker:NSObject{
     
-    override init(image: UIImage?) {
-        super.init(image: image)
-        
-        let gesReg = UILongPressGestureRecognizer.init(target: self, action: #selector(longPressTriggered))
-        self.addGestureRecognizer(gesReg)
-        
-    }
     
-    required init?(coder aDecoder: NSCoder) {
-        super.init(coder: aDecoder)
-    }
-    
-    func longPressTriggered(){
+   static func creatQRCode(withString str:String) -> UIImage{
         
+        let data = str.data(using: String.Encoding.utf8,allowLossyConversion: false)
+        let filter = CIFilter.init(name: "CIQRCodeGenerator")
+        filter?.setValue(data, forKey: "inputMessage")
+        filter?.setValue("Q", forKey: "inputCorrectionLevel")
+        
+        let qrImage = filter?.outputImage
+        return UIImage.init(ciImage: qrImage!)
         
     }
     
+    
+    //scan QR Image from a picture
+   static func scanQRFromPhotos(_ image:UIImage) -> String{
+        let detector = CIDetector.init(ofType: CIDetectorTypeQRCode, context: nil, options: [CIDetectorAccuracy:CIDetectorAccuracyHigh])
+    
+    
+        let results = detector?.features(in: CIImage.init(image: image)!)
+    
+    if !(results?.isEmpty)!{
+        
+        let result = results?.first as! CIQRCodeFeature
+        
+        return result.messageString!
+    }else{
+        return "nothing"
+        }
+    }
 }
+
+//class AutoDetectImageView: UIImageView{
+//    
+//    var didScanComplete:((_ result:String)->Void)?
+//    
+//    
+//    
+//    required init?(coder aDecoder: NSCoder) {
+//        super.init(coder: aDecoder)
+//    }
+//    
+//    func longPressTriggered(){
+//        
+//        let result = QRHacker.scanQRFromPhotos(self.image!)
+//        didScanComplete!(result)
+//
+//    }
+//    
+//}
+
