@@ -1,7 +1,7 @@
  # DIFFQR
  A Easy way to do QRCode detect/code/decode/ on iOS, implement with Apple's native API
  
-# INSTALL WITH CARTHAGE
+# Install With Carthage
  
 [Carthage](https://github.com/Carthage/Carthage) is a decentralized dependency manager that builds your dependencies and provides you with binary frameworks.
  
