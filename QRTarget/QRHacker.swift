@@ -29,15 +29,15 @@ import CoreImage
 //wait to do: set function button size dynamically
 
 
-class QRHackerViewController : UIViewController, AVCaptureMetadataOutputObjectsDelegate,UIImagePickerControllerDelegate, UINavigationControllerDelegate {
+public class QRHackerViewController : UIViewController, AVCaptureMetadataOutputObjectsDelegate,UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     
     var session = AVCaptureSession.init()
     
-    var didScanComplete:((_ result:String)->Void)?
-    var didScanFiald:(()->Void)?
+   public  var didScanComplete:((_ result:String)->Void)?
+   public  var didScanFiald:(()->Void)?
     
     //view life cycle
-    override func viewDidLoad() {
+    override public func viewDidLoad() {
         
         super.viewDidLoad()
         
@@ -45,7 +45,7 @@ class QRHackerViewController : UIViewController, AVCaptureMetadataOutputObjectsD
         
     }
     
-    override func viewDidAppear(_ animated: Bool) {
+    override public func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         setUpCancelScan()
         
@@ -181,7 +181,7 @@ class QRHackerViewController : UIViewController, AVCaptureMetadataOutputObjectsD
     }
     
     
-    func captureOutput(_ captureOutput: AVCaptureOutput!, didOutputMetadataObjects metadataObjects: [Any]!, from connection: AVCaptureConnection!) {
+    public func captureOutput(_ captureOutput: AVCaptureOutput!, didOutputMetadataObjects metadataObjects: [Any]!, from connection: AVCaptureConnection!) {
         
         if metadataObjects.count > 0{
             
@@ -198,12 +198,12 @@ class QRHackerViewController : UIViewController, AVCaptureMetadataOutputObjectsD
     
     //MARK: imagePicker delegate methohs
     
-    func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
+    public func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
         //
     }
     
     
-    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
+    public func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
         
         let image = info[UIImagePickerControllerOriginalImage]
         picker.dismiss(animated: true) { 
@@ -221,17 +221,17 @@ class QRHackerViewController : UIViewController, AVCaptureMetadataOutputObjectsD
     //create qr code image from string
     
     
-    override func didReceiveMemoryWarning() {
+    override public func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
     
 }
 
-class QRHacker:NSObject{
+public class QRHacker:NSObject{
     
     
-   static func creatQRCode(withString str:String) -> UIImage{
+  public static func creatQRCode(withString str:String) -> UIImage{
         
         let data = str.data(using: String.Encoding.utf8,allowLossyConversion: false)
         let filter = CIFilter.init(name: "CIQRCodeGenerator")
@@ -245,7 +245,7 @@ class QRHacker:NSObject{
     
     
     //scan QR Image from a picture
-   static func scanQRFromPhotos(_ image:UIImage) -> String{
+  public static func scanQRFromPhotos(_ image:UIImage) -> String{
         let detector = CIDetector.init(ofType: CIDetectorTypeQRCode, context: nil, options: [CIDetectorAccuracy:CIDetectorAccuracyHigh])
     
     

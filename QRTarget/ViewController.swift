@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import QRKit
 
 class ViewController: UIViewController {
 

@@ -4,6 +4,11 @@
 <dict>
 	<key>SchemeUserState</key>
 	<dict>
+		<key>QRKit.xcscheme_^#shared#^_</key>
+		<dict>
+			<key>orderHint</key>
+			<integer>1</integer>
+		</dict>
 		<key>QRTarget.xcscheme</key>
 		<dict>
 			<key>orderHint</key>
@@ -12,6 +17,11 @@
 	</dict>
 	<key>SuppressBuildableAutocreation</key>
 	<dict>
+		<key>574D61F01EF392470022A28F</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
 		<key>57B8C2401ED418B700AA6F56</key>
 		<dict>
 			<key>primary</key>
